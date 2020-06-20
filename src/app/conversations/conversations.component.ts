@@ -28,7 +28,7 @@ export class ConversationsComponent implements OnInit {
     this.api.getConversations(email)
       .subscribe(
         res => {
-          if (!Array.isArray(res.conversations) || !res.message.conversations) {
+          if (!Array.isArray(res.conversations) || !res.conversations) {
             this.conversations.push(this.preLoadedConversation)
           }
           res.conversations.forEach(conversation => {
