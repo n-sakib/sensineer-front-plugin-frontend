@@ -6,11 +6,13 @@ import { ConversationsComponent } from './conversations/conversations.component'
 const routes: Routes = [
   {
     path: '',
-    component: CustomerOrderInfoComponent
+    component: CustomerOrderInfoComponent,
+    data: {animation: 'Home'}
   },
   {
     path: 'conversations',
-    component: ConversationsComponent
+    component: ConversationsComponent,
+    data: {animation: 'Conversations'}
   }
 ];
 

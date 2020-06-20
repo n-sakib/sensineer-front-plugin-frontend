@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiService } from '../services/api.service'
+import { ApiService } from '../services/api.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-customer-order-info',
@@ -9,37 +10,37 @@ import { ApiService } from '../services/api.service'
 
 export class CustomerOrderInfoComponent implements OnInit {
 
-  customers = [];
-  selectedCustomers = [];
+  customers: any = [];
+  selectedCustomers: any = [];
   contentLoading = true;
   individualLoading = true;
-  constructor(public api: ApiService) { }
+
+  constructor(private api: ApiService, private router: Router) {}
 
   ngOnInit(): void {
-    const temp = [];
+    
     this.initCustomers()
-
   }
 
   initCustomers = () => {
     this.api.getCustomerEmails()
       .subscribe(
         res => {
-          res.data.forEach(customer => {
+          res.customer.forEach(customer => {
             customer.loading = true
             this.customers.push(customer);
             this.selectedCustomers.push(customer);
           }),
             error => console.log(error)
         }).add(() => {
-          this.contentLoading = false
-          this.getOrders()
+          this.contentLoading = false;
+          this.getOrders();
         });
   }
 
   getOrders = () => {
     this.customers.forEach((customer, idx) => {
-
+      
       this.api.getCustomerInfo(customer.email)
         .subscribe(
           res => {
@@ -75,8 +76,8 @@ export class CustomerOrderInfoComponent implements OnInit {
     this.individualLoading = false;
   }
 
-  seeConversations = () => {
-    console.log("here")
+  seeConversations = (email, conversation) => {
+    this.router.navigateByUrl('/conversations', { state: { email, conversation}});
   }
 
   search = (event) => { //todo -> fix info

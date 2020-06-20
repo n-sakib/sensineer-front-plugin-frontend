@@ -1,1 +1,25 @@
-<p>conversations works!</p>
+<div class="toolbar" role="banner">
+    <mat-icon aria-hidden="false" class="logo-icon" aria-label="Customers" (click)="goBack()">arrow_back</mat-icon>
+    <span>Conversations</span>
+</div>
+<div class="content" role="main">
+    <div class="center" *ngIf="contentLoading else loaded">
+        <mat-progress-spinner diameter=50 mode="indeterminate" color="primary">
+        </mat-progress-spinner>
+    </div>
+    <ng-template #loaded>
+        <div #loaded *ngFor="let conversation of conversations">
+            <mat-card>
+                <mat-card-content>
+                    <mat-card-title class="title">#{{conversation.id}}</mat-card-title>
+                    <mat-card-subtitle>{{conversation.created}}</mat-card-subtitle>
+                    <mat-list role="list">
+                        <mat-card-subtitle>Subject: {{conversation.subject}}</mat-card-subtitle>
+                        <mat-card-subtitle>Status: {{conversation.status}}</mat-card-subtitle>
+                    </mat-list>
+                    <button mat-flat-button (click)="openConversation(conversation.id)">See Conversations</button>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </ng-template>
+</div>

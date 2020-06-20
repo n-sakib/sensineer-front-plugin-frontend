@@ -1,47 +1,61 @@
-<mat-spinner class="loader" *ngIf="contentLoading else loaded"></mat-spinner>
-<ng-template #loaded>
-    <mat-form-field appearance="standard" class="search-box">
-        <mat-label>Search</mat-label>
-        <input matInput placeholder="Search using name, email, order number, phone number or zip code" (keyup)=search($event) >
-        <mat-icon matSuffix>search</mat-icon>
-      </mat-form-field>
-    <mat-progress-bar mode="indeterminate" *ngIf="individualLoading"></mat-progress-bar>
-    <div *ngFor="let customer of selectedCustomers">
-        <mat-expansion-panel [disabled]="customer.loading" *ngIf="(customer.info | json) != '{}'">
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-                    {{customer.name}} - {{customer.email}}
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-            <mat-tab-group mat-align-tabs="center">
-                <mat-tab label="Information">
-                    <mat-card>
-                        <mat-card-content>
-                            <mat-card-title>{{customer.name}}</mat-card-title>
-                            <mat-card-subtitle>{{customer.email}}</mat-card-subtitle>
-                            <mat-list role="list">
-                                <mat-card-subtitle>Site Prefix: {{customer.tlds}}</mat-card-subtitle>
-                                <mat-card-subtitle>Zip Code: {{customer.postcode}}</mat-card-subtitle>
-                                <mat-card-subtitle>Phone Number: {{customer.phn}}</mat-card-subtitle>
-                                <mat-card-subtitle>Company Name: {{customer.company}}</mat-card-subtitle>
-                            </mat-list>
-                        </mat-card-content>
-                      </mat-card>
-                    
-                </mat-tab>
-                <mat-tab label="Orders">
-                    <mat-card *ngFor="let order of customer.orders" (click)="openPost(order.id, order.tld)">
-                        <mat-card-content>
-                            <mat-card-title>#{{order.id}}</mat-card-title>
-                            <mat-card-subtitle>{{order.value}}</mat-card-subtitle>
-                            <mat-list role="list">
-                                <mat-card-subtitle *ngFor="let item of order.items">{{item.name}} x {{item.quantity}}</mat-card-subtitle>
-                            </mat-list>
-                        </mat-card-content>
-                      </mat-card>
-                </mat-tab>
-            </mat-tab-group>
-            <button mat-flat-button (Click)= "seeConversations()">See Conversations </button>
-        </mat-expansion-panel>
+<div class="toolbar" role="banner">
+    <mat-icon aria-hidden="false" class="logo-icon" aria-label="Customers">supervisor_account</mat-icon>
+    <span>Customer/ Order info</span>
+
+</div>
+
+<div class="content" role="main">
+    <div class="center" *ngIf="contentLoading else loaded">
+        <mat-progress-spinner diameter=50 
+                              mode="indeterminate"
+                              color="primary">
+        </mat-progress-spinner> 
     </div>
-</ng-template>
+    <ng-template #loaded>
+        <mat-form-field appearance="standard" class="search-box">
+            <mat-label>Search</mat-label>
+            <input matInput placeholder="Name, email, order number, phone or zip code"
+                (keyup)=search($event)>
+            <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+        <mat-progress-bar mode="indeterminate" *ngIf="individualLoading"></mat-progress-bar>
+        <div *ngFor="let customer of selectedCustomers">
+            <mat-expansion-panel [disabled]="customer.loading" *ngIf="(customer.info | json) != '{}'">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <small>{{customer.name}} - {{customer.email}}</small>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-tab-group mat-align-tabs="center">
+                    <mat-tab label="Information">
+                        <mat-card>
+                            <mat-card-content>
+                                <mat-card-title class="title">{{customer.name}}</mat-card-title>
+                                <mat-card-subtitle>{{customer.email}}</mat-card-subtitle>
+                                <mat-list role="list">
+                                    <mat-card-subtitle>Site Prefix: {{customer.tlds}}</mat-card-subtitle>
+                                    <mat-card-subtitle>Zip Code: {{customer.postcode}}</mat-card-subtitle>
+                                    <mat-card-subtitle>Phone Number: {{customer.phn}}</mat-card-subtitle>
+                                    <mat-card-subtitle>Company Name: {{customer.company}}</mat-card-subtitle>
+                                </mat-list>
+                            </mat-card-content>
+                        </mat-card>
+                    </mat-tab>
+                    <mat-tab label="Orders">
+                        <mat-card class="orders" *ngFor="let order of customer.orders" (click)="openPost(order.id, order.tld)">
+                            <mat-card-content>
+                                <mat-card-title>#{{order.id}}</mat-card-title>
+                                <mat-card-subtitle>{{order.value}}</mat-card-subtitle>
+                                <mat-list role="list">
+                                    <mat-card-subtitle *ngFor="let item of order.items">{{item.name}} x
+                                        {{item.quantity}}</mat-card-subtitle>
+                                </mat-list>
+                            </mat-card-content>
+                        </mat-card>
+                    </mat-tab>
+                </mat-tab-group>
+                <button mat-flat-button (click)="seeConversations(customer.email, customer.conversation)">See Conversations</button>
+            </mat-expansion-panel>
+        </div>
+    </ng-template>
+</div>

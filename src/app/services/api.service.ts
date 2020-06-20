@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { environment } from './../../environments/environment';
-import { Observable, EMPTY } from 'rxjs';
+import { Observable } from 'rxjs';
 
 
 @Injectable({
@@ -26,5 +26,9 @@ export class ApiService {
 
   getPostId = (orderId): Observable<any> => {
     return this.http.get(`${environment.serverURL}/woocommerce/post?orderid=${orderId}`)
+  }
+
+  getConversations = (email): Observable<any> => {
+    return this.http.get(`${environment.serverURL}/front/conversations?email=${email}`)
   }
 }
