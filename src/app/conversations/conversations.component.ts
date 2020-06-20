@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { ApiService } from '../services/api.service'
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { switchMap } from 'rxjs/operators';
+import { ApiService } from '../services/api.service';
 
 @Component({
   selector: 'app-conversations',
@@ -17,9 +15,7 @@ export class ConversationsComponent implements OnInit {
   contentLoading = true;
 
   constructor(private location: Location,
-    public api: ApiService,
-    private route: ActivatedRoute,
-    private router: Router) { }
+    public api: ApiService) { }
 
   ngOnInit(): void {
     var state: any = this.location.getState();
@@ -32,12 +28,11 @@ export class ConversationsComponent implements OnInit {
     this.api.getConversations(email)
       .subscribe(
         res => {
-          if (!Array.isArray(res.message) || !res.message.length) {
+          if (!Array.isArray(res.conversations) || !res.message.conversations) {
             this.conversations.push(this.preLoadedConversation)
-            console.log(this.conversations)
           }
-          res.message.forEach(customer => {
-            this.conversations.push(customer);
+          res.conversations.forEach(conversation => {
+            this.conversations.push(conversation);
           }),
             error => console.log(error)
         }).add(() => {
