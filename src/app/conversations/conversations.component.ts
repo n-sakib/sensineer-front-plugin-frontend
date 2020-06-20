@@ -32,7 +32,7 @@ export class ConversationsComponent implements OnInit {
     this.api.getConversations(email)
       .subscribe(
         res => {
-          if (!res.message.length) {
+          if (!Array.isArray(res.message) || !res.message.length) {
             this.conversations.push(this.preLoadedConversation)
             console.log(this.conversations)
           }
