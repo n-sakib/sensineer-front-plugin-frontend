@@ -58,4 +58,13 @@ mat-expansion-panel{
     cursor: pointer;
   }
 
+  .list-titles {
+    padding-top: 5px;
+    padding-bottom: 3px;
+  }
+
+  .mat-card-subtitle {
+    margin-bottom: 16px;
+  }
+
 
