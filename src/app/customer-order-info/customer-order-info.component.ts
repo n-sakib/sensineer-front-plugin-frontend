@@ -65,6 +65,7 @@ export class CustomerOrderInfoComponent implements OnInit {
   pushCustomerData = (res, idx) => {
     this.customers[idx].info = res.data.customer
     this.customers[idx].name = `${res.data.customer.first_name} ${res.data.customer.last_name}`
+    this.customers[idx].email = res.data.customer.email
     this.customers[idx].tlds = res.data.tlds
     this.customers[idx].phn = res.data.customer.phone
     this.customers[idx].postcode = res.data.customer.postcode
@@ -87,7 +88,7 @@ export class CustomerOrderInfoComponent implements OnInit {
     let postId
     this.individualLoading = true;
     this.api.getPostId(id).subscribe(res => {
-      res.data === 0 ? postId = id : postId = res.data
+      res.data === 0 ? postId = id : postId = res.id
       window.open(`https://www.smoovall.${tld}/wp-admin/post.php?post=${postId}&action=edit`, "_blank"),
         error => console.log(error)
     })
@@ -103,7 +104,8 @@ export class CustomerOrderInfoComponent implements OnInit {
     if (this.searchText != '') {
       if (/^([0-9]{4,7})$/.test(this.searchText)) {
         this.api.getPostId(this.searchText).subscribe(res => {
-          this.api.getCustomerInfo(res)
+          if(res.id !== 0) {
+            this.api.getCustomerInfo(res.id)
             .subscribe(
               res => {
                 this.customers[0] = {}
@@ -113,20 +115,27 @@ export class CustomerOrderInfoComponent implements OnInit {
                 this.individualLoading = false;
                 this.contentLoading = false;
               });
+          } else {
+            this.getUpdatedInfo(this.searchText)
+          }
         })
       } else {
-        this.api.getCustomerInfo(this.searchText)
-        .subscribe(
-          res => {
-            this.customers[0] = {}
-            this.pushCustomerData(res, 0)
-            error => console.log(error)
-          }).add(() => {
-            this.individualLoading = false;
-            this.contentLoading = false;
-          });
+        this.getUpdatedInfo(this.searchText)
       }
     }
+  }
+
+  getUpdatedInfo = (text) => {
+    this.api.getCustomerInfo(text)
+    .subscribe(
+      res => {
+        this.customers[0] = {}
+        this.pushCustomerData(res, 0)
+        error => console.log(error)
+      }).add(() => {
+        this.individualLoading = false;
+        this.contentLoading = false;
+      });
   }
 
   saveInput = (event) => {
