@@ -101,7 +101,7 @@ export class CustomerOrderInfoComponent implements OnInit {
   search = () => {
     this.contentLoading = true;
     if (this.searchText != '') {
-      if (/^([0-9]{5,7})$/.test(this.searchText)) {
+      if (/^([0-9]{4,7})$/.test(this.searchText)) {
         this.api.getPostId(this.searchText).subscribe(res => {
           this.api.getCustomerInfo(res)
             .subscribe(
@@ -115,9 +115,7 @@ export class CustomerOrderInfoComponent implements OnInit {
               });
         })
       } else {
-        console.log("not")
-      }
-      this.api.getCustomerInfo(this.searchText)
+        this.api.getCustomerInfo(this.searchText)
         .subscribe(
           res => {
             this.customers[0] = {}
@@ -127,6 +125,7 @@ export class CustomerOrderInfoComponent implements OnInit {
             this.individualLoading = false;
             this.contentLoading = false;
           });
+      }
     }
   }
 
