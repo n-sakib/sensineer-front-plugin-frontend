@@ -102,26 +102,7 @@ export class CustomerOrderInfoComponent implements OnInit {
   search = () => {
     this.contentLoading = true;
     if (this.searchText != '') {
-      if (/^([0-9]{4,7})$/.test(this.searchText)) {
-        this.api.getPostId(this.searchText).subscribe(res => {
-          if(res.id !== 0) {
-            this.api.getCustomerInfo(res.id)
-            .subscribe(
-              res => {
-                this.customers[0] = {}
-                this.pushCustomerData(res, 0)
-                error => console.log(error)
-              }).add(() => {
-                this.individualLoading = false;
-                this.contentLoading = false;
-              });
-          } else {
-            this.getUpdatedInfo(this.searchText)
-          }
-        })
-      } else {
-        this.getUpdatedInfo(this.searchText)
-      }
+      this.getUpdatedInfo(this.searchText)
     }
   }
 
