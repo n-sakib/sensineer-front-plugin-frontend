@@ -17,12 +17,14 @@ export class CustomerOrderInfoComponent implements OnInit {
   contentLoading = false;
   searchText = '';
   currentLoading = 0;
+  isOrder = false;
 
   constructor(private api: ApiService, private router: Router) { }
 
   ngOnInit(): void {
     Front.contextUpdates.subscribe(context => {
       this.contentLoading = false;
+      this.isOrder = false;
       this.customers = []
       switch (context.type) {
         case 'noConversation':
@@ -50,7 +52,7 @@ export class CustomerOrderInfoComponent implements OnInit {
   getOrders = () => {
     this.currentLoading += 1;
     this.customers.forEach((customer, idx) => {
-      this.api.getCustomerInfo(customer.email)
+      this.api.getCustomerInfo(customer.email, this.isOrder)
         .subscribe(
           res => {
             this.pushCustomerData(res, idx)
@@ -103,9 +105,10 @@ export class CustomerOrderInfoComponent implements OnInit {
     this.contentLoading = true;
     if (this.searchText != '') {
       if (/^([0-9]{4,7})$/.test(this.searchText)) {
+        this.isOrder = true;
         this.api.getPostId(this.searchText).subscribe(res => {
           if(res.id !== 0) {
-            this.api.getCustomerInfo(res.id)
+            this.api.getCustomerInfo(res.id, this.isOrder)
             .subscribe(
               res => {
                 this.customers[0] = {}
@@ -120,12 +123,12 @@ export class CustomerOrderInfoComponent implements OnInit {
           }
         })
       } else {
-        this.getUpdatedInfo(this.searchText)
+        this.getUpdatedInfo(this.searchText, false)
       }
     }
   }
 
-  getUpdatedInfo = (text, isOrder?) => {
+  getUpdatedInfo = (text, isOrder) => {
     this.api.getCustomerInfo(text, isOrder)
     .subscribe(
       res => {

@@ -20,13 +20,8 @@ export class ApiService {
     return this.http.get(`${environment.serverURL}/front/customers?q[statuses][]=assigned&q[statuses][]=unassigned`)
   }
 
-  getCustomerInfo= (identifier, isOrder?): Observable<any> => {
-    if(isOrder !== undefined) {
-      return this.http.get(`${environment.serverURL}/woocommerce/orders?identifier=${identifier}&isOrder=${true}`)
-    } else {
-      return this.http.get(`${environment.serverURL}/woocommerce/orders?identifier=${identifier}`)
-    }
-    
+  getCustomerInfo= (identifier, isOrder): Observable<any> => {
+    return this.http.get(`${environment.serverURL}/woocommerce/orders?identifier=${identifier}&isOrder=${isOrder}`) 
   }
 
   getPostId = (orderId): Observable<any> => {
